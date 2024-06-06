@@ -346,7 +346,7 @@ elif selected == "Predecir Precio":
         if st.button("Predecir Precio"):
             precio_predicho = predecir_precio(coche)
             precio_formateado = f"{precio_predicho:,.2f}".replace(',', ' ')
-            st.markdown(f"<h2 style='text-align: center; color: green;'>El precio predicho para el coche es: {precio_formateado} € euros</h2>", unsafe_allow_html=True)
+            st.markdown(f"<h2 style='text-align: center; color: green;'>El precio predicho para el coche es: <br>{precio_formateado} € euros</h2>", unsafe_allow_html=True)
             
             col1, col2 = st.columns([1, 2])
             
