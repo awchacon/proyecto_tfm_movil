@@ -92,6 +92,10 @@ header {
     text-align: center;
 }
 
+/* Ajustes para títulos específicos */
+.stMarkdown h1 {
+    font-size: 60px !important; /* Aumentar significativamente el tamaño del título */
+}
 .stHeader h2 {
     font-size: 20px; /* Tamaño ajustado para st.header */
     color: #210a93 !important;
