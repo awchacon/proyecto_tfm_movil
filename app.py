@@ -420,7 +420,7 @@ a:hover,  a:active {
             Síguenos en <a href="url_de_tu_perfil_de_linkedin" target="_blank">LinkedIn</a>
         </p>
     </div>
-    <p>Creador 🤖 por <a href="www.linkedin.com/in/aaron-chacon" target="_blank">Los de atras</a></p>
+    <p>Creador 🤖 por <a href="www.linkedin.com/in/aaron-chacon" target="_blank">DeepCarVision</a></p>
 </div>
 """
 

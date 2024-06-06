@@ -18,8 +18,8 @@ h1 {
     color: #210a93 !important; /* Cambiar color del título */
     font-style: italic;
     text-align: center;
-    font-size: 36px; /* Ajuste para móviles */
-    margin: 10px 0;
+    font-size: 50px; /* Ajuste para móviles */
+    margin: 20px 0;
 }
 
 p {
