@@ -46,7 +46,7 @@ def load_css():
 load_css()
 
 # Título principal
-st.markdown("<h1 class='center-text'>DeepCarVision</h1>", unsafe_allow_html=True)
+st.markdown("<h2 class='center-text'>DeepCarVision</h2>", unsafe_allow_html=True)
 st.write("")
 
 # Menú de opciones
