@@ -1,0 +1,83 @@
+body {
+    font-family: Arial, sans-serif;
+    background-color: #000000; /* Fondo negro */
+}
+
+.container {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 20px;
+    background-color: #fff; /* Fondo blanco para el contenedor */
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+h1 {
+    color: #210a93 !important; /* Cambiar color del título */
+    font-style: italic;
+    text-align: left;
+    font-size: 110px;
+}
+
+p {
+    color: #ffffff !important; /* Cambiar color del párrafo */
+    font-size: 25px;
+    font-style: italic;
+    font-family: Arial, Helvetica, sans-serif;
+}
+
+header {
+    /*background-color: #210a93 !important; /* Cambiar color de fondo del header */
+    font-size: 25px;
+    color: #ff5733 !important; /* Cambiar color del texto del header */
+    padding: 10px 20px;
+    border-radius: 8px 8px 0 0;
+}
+
+.image {
+    width: 100%;
+    height: auto;
+    border-radius: 8px;
+}
+
+/* Estilos para centrar el contenido */
+.centered-content {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    width: 100%;
+    margin-bottom: 20px; /* Ajusta este margen según sea necesario */
+}
+
+.centered-content img {
+    max-width: 100%;
+    height: auto;
+    margin-bottom: 10px; /* Espacio entre la imagen y el texto */
+}
+
+.center-text {
+    text-align: center;
+    color: black;
+    font-size: 15px;
+    font-family: Arial, sans-serif;
+}
+
+/* Estilos para las pestañas */
+.stTabs [data-baseweb="tab"] {
+    color: #ff5733 !important; /* Cambiar color del texto de las pestañas */
+    font-size: 18px; /* Cambiar tamaño de la fuente */
+}
+
+.stTabs [data-baseweb="tab"]:hover {
+    color: #210a93 !important; /* Cambiar color del texto al pasar el mouse por las pestañas */
+}
+
+.stTabs [data-baseweb="tab"]:focus {
+    color: #ff5733 !important; /* Cambiar color del texto de las pestañas al enfocarse */
+}
+
+.stTabs [aria-selected="true"] {
+    color: #ffffff !important; /* Cambiar color del texto de las pestañas activas */
+}
