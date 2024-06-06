@@ -18,7 +18,7 @@ h1 {
     color: #210a93 !important; /* Cambiar color del título */
     font-style: italic;
     text-align: center;
-    font-size: 60px; /* Aumento significativo del tamaño del título */
+    font-size: 36px; /* Ajuste del tamaño del título principal */
     margin: 20px 0;
 }
 
@@ -84,19 +84,25 @@ header {
     color: #ffffff !important; /* Cambiar color del texto de las pestañas activas */
 }
 
-/* Ajustes para títulos específicos */
-.stMarkdown h1 {
-    font-size: 60px !important; /* Aumentar significativamente el tamaño del título */
+/* Ajustes específicos para st.title y st.header */
+.stTitle h1 {
+    font-size: 24px; /* Tamaño ajustado para st.title */
+    color: #210a93 !important;
+    font-style: italic;
+    text-align: center;
 }
 
-.stMarkdown h2 {
-    font-size: 30px !important; /* Ajuste para subtítulos */
+.stHeader h2 {
+    font-size: 20px; /* Tamaño ajustado para st.header */
+    color: #210a93 !important;
+    font-style: italic;
+    text-align: center;
 }
 
 /* Media Queries para móviles */
 @media (max-width: 600px) {
     h1 {
-        font-size: 60px; /* Aumentar significativamente el tamaño del título */
+        font-size: 36px; /* Aumentar significativamente el tamaño del título */
     }
 
     p {
