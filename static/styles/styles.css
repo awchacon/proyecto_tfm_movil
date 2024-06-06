@@ -15,7 +15,7 @@ body {
 h1 {
     color: #210a93 !important; /* Cambiar color del título */
     font-style: italic;
-    text-align: left;
+    text-align: center;
     font-size: 110px;
 }
 
@@ -27,7 +27,6 @@ p {
 }
 
 header {
-    /*background-color: #210a93 !important; /* Cambiar color de fondo del header */
     font-size: 25px;
     color: #ff5733 !important; /* Cambiar color del texto del header */
     padding: 10px 20px;

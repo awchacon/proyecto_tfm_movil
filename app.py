@@ -29,6 +29,12 @@ import tensorflow as tf
 
 #configuramos el title de nuestra pagina -- streamlit run .\app.py
 
+# import streamlit as st
+# import pandas as pd
+# import plotly.express as px
+# import base64
+# from PIL import Image
+
 # Configuración de la página
 st.set_page_config(page_title="DeepCarVision", page_icon="static/images/logo.png", layout="centered")
 
@@ -155,10 +161,9 @@ def Coches():
             textposition='inside'
         )
 
-        left_column, right_column, center_column = st.columns(3)
-        left_column.plotly_chart(fig_state, use_container_width=True)
-        right_column.plotly_chart(fig_Marca_Cambio, use_container_width=True)
-        center_column.plotly_chart(fig_pie, use_container_width=True)
+        st.plotly_chart(fig_state, use_container_width=True)
+        st.plotly_chart(fig_Marca_Cambio, use_container_width=True)
+        st.plotly_chart(fig_pie, use_container_width=True)
         
     except Exception as e:
         st.error(f"Error: {e}")
@@ -212,7 +217,6 @@ def Inspeccion():
             st.write(f"Año:  {datos['Año'][current_image_index]}")
             st.write(f"Url :  {datos['Imagen'][current_image_index]}")
 
-
         except Exception as e:
             st.error('NO HAY VEHÍCULOS QUE COINCIDAN CON LOS FILTROS APLICADOS')
             st.error(f"Error: {e}")
@@ -250,7 +254,6 @@ def Inspeccion():
             st.table(df[['Marca', 'Cambio', 'Precio', 'Carrocería','Distintivo']].head())
 
     return main()
-
 
 def Imagen():
     st.markdown('</div>', unsafe_allow_html=True)
