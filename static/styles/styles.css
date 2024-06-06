@@ -100,4 +100,18 @@ header {
     .footer p {
         margin: 3px;
     }
+
+    .stTabs [data-baseweb="tab"] {
+        font-size: 14px;
+    }
+
+    .stTabs {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .centered-content {
+        margin-bottom: 10px;
+    }
 }
