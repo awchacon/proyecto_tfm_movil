@@ -18,7 +18,7 @@ h1 {
     color: #210a93 !important; /* Cambiar color del título */
     font-style: italic;
     text-align: center;
-    font-size: 25px; /* Ajuste para móviles */
+    font-size: 60px; /* Aumento significativo del tamaño del título */
     margin: 20px 0;
 }
 
@@ -87,7 +87,7 @@ header {
 /* Media Queries para móviles */
 @media (max-width: 600px) {
     h1 {
-        font-size: 48px; /* Aumentar tamaño del título */
+        font-size: 60px; /* Aumentar significativamente el tamaño del título */
     }
 
     p {
