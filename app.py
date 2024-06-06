@@ -29,26 +29,28 @@ import tensorflow as tf
 
 #configuramos el title de nuestra pagina -- streamlit run .\app.py
 
-# import streamlit as st
-# import pandas as pd
-# import plotly.express as px
-# import base64
-# from PIL import Image
+import streamlit as st
+import pandas as pd
+import plotly.express as px
+import base64
+from PIL import Image
 
 # Configuración de la página
 st.set_page_config(page_title="DeepCarVision", page_icon="static/images/logo.png", layout="centered")
 
 # Cargar el archivo CSS
-with open("static/styles/styles.css") as f:
-    st.markdown(f'<style>{f.read()}</style>', unsafe_allow_html=True)
+def load_css():
+    with open("static/styles/styles.css") as f:
+        st.markdown(f'<style>{f.read()}</style>', unsafe_allow_html=True)
+
+load_css()
 
 # Título principal
 st.markdown("<h1 class='center-text'>DeepCarVision</h1>", unsafe_allow_html=True)
 st.write("")
-st.write("")
 
 # Menú de opciones
-selected = st.sidebar.selectbox(
+selected = st.selectbox(
     "Menu",
     ["Inicio", "Imagen", "DB Coches", "Inspeccion", "Predecir Precio"]
 )
@@ -66,9 +68,9 @@ def HomePage():
 
 def Coches():
     try:
-        st.sidebar.header("Por favor filtre aquí:")
+        st.header("Por favor filtre aquí:")
         Accion = ['Comprar', 'Vender']
-        filtro_accion = st.sidebar.selectbox('Elija una opción:', Accion, index=0)
+        filtro_accion = st.selectbox('Elija una opción:', Accion, index=0)
 
         if filtro_accion == 'Comprar':
             df = pd.read_csv('data/bd_final.csv', sep=',', header=0)
@@ -81,10 +83,10 @@ def Coches():
         df_distintivo_unique = df['Distintivo'].unique()
         df_carroceria_unique = df['Carrocería'].unique()
 
-        Marca = st.sidebar.multiselect('Marca de coche:', df_marca_unique, default=df_marca_unique)
-        Cambio = st.sidebar.multiselect('Cambio:', df_cambio_unique, default=df_cambio_unique)
-        Distintivo = st.sidebar.multiselect('Distintivo:', df_distintivo_unique, default=df_distintivo_unique)
-        Carroceria = st.sidebar.multiselect('Carrocería:', df_carroceria_unique, default=df_carroceria_unique)
+        Marca = st.multiselect('Marca de coche:', df_marca_unique, default=df_marca_unique)
+        Cambio = st.multiselect('Cambio:', df_cambio_unique, default=df_cambio_unique)
+        Distintivo = st.multiselect('Distintivo:', df_distintivo_unique, default=df_distintivo_unique)
+        Carroceria = st.multiselect('Carrocería:', df_carroceria_unique, default=df_carroceria_unique)
 
         if not Marca:
             Marca = df_marca_unique.tolist()
@@ -169,10 +171,8 @@ def Coches():
         st.error(f"Error: {e}")
 
 def Inspeccion():
-    but_alq, but_com = st.sidebar.columns(2)
-
     Accion = ['Comprar', 'Vender']
-    filtro_accion = st.sidebar.selectbox('Elegir Acción:', Accion, index=0)
+    filtro_accion = st.selectbox('Elegir Acción:', Accion, index=0)
 
     if filtro_accion == 'Comprar':
         df = pd.read_csv('data/bd_final.csv', sep=',', header=0)
@@ -233,14 +233,14 @@ def Inspeccion():
 
         st.write('Seleccione los filtros deseados para que le muestre aquellos coches que cumplen dichos filtros.')
 
-        st.sidebar.header('Filtros')
+        st.header('Filtros')
 
-        filtro_Marca = st.sidebar.selectbox('Filtrar por marca de coche:', sorted(df['Marca'].unique()))
-        filtro_Cambio = st.sidebar.selectbox('Filtrar por Cambio:', sorted(df['Cambio'].unique()))
-        filtro_Carroceria = st.sidebar.selectbox('Filtrar por Carrocería:', sorted(df['Carrocería'].unique()))
-        filtro_Precio = st.sidebar.slider('Filtrar por precio:', min_value=min_precio, max_value=max_precio, value=(min_precio, max_precio))
+        filtro_Marca = st.selectbox('Filtrar por marca de coche:', sorted(df['Marca'].unique()))
+        filtro_Cambio = st.selectbox('Filtrar por Cambio:', sorted(df['Cambio'].unique()))
+        filtro_Carroceria = st.selectbox('Filtrar por Carrocería:', sorted(df['Carrocería'].unique()))
+        filtro_Precio = st.slider('Filtrar por precio:', min_value=min_precio, max_value=max_precio, value=(min_precio, max_precio))
 
-        if st.sidebar.button('Aplicar'):
+        if st.button('Aplicar'):
             data_filtrada = df[['Marca', 'Cambio', 'Precio', 'Carrocería']][
                 (df['Precio'] >= filtro_Precio[0]) & (df['Precio'] <= filtro_Precio[1]) &
                 (df['Marca'] == filtro_Marca) & (df['Cambio'] == filtro_Cambio) & (df['Carrocería'] == filtro_Carroceria)
@@ -322,15 +322,15 @@ elif selected == "Predecir Precio":
         if st.session_state.precio_predicho is None:
             st.markdown("<h2 style='text-align: center; font-size:24px;'>Predicción de Precio de Coches</h2>", unsafe_allow_html=True)
 
-        st.sidebar.header("Ingrese los datos del coche:")
-        marca = st.sidebar.selectbox("Marca:", ['CITROEN', 'PEUGEOT', 'AUDI', 'TOYOTA', 'BMW', 'SEAT', 'HYUNDAI'])
-        año = st.sidebar.slider("Año:", 2017, 2023)
-        combustible = st.sidebar.selectbox("Combustible:", ['Gasolina', 'Diesel', 'Híbrido'])
-        distintivo = st.sidebar.selectbox("Distintivo:", ['C', 'ECO', 'B', '0 EMISIONES'])
-        carroceria = st.sidebar.selectbox("Carrocería:", ['Berlina', 'Todo Terreno', 'Stationwagon', 'Monovolumen', 'Coupe', 'Convertible'])
-        kilometros = st.sidebar.number_input("Kilómetros:", min_value=0, value=0)
-        cambio = st.sidebar.selectbox("Cambio:", ['Manual', 'Automático'])
-        potencia = st.sidebar.number_input("Potencia:", min_value=0, value=100)
+        st.header("Ingrese los datos del coche:")
+        marca = st.selectbox("Marca:", ['CITROEN', 'PEUGEOT', 'AUDI', 'TOYOTA', 'BMW', 'SEAT', 'HYUNDAI'])
+        año = st.slider("Año:", 2017, 2023)
+        combustible = st.selectbox("Combustible:", ['Gasolina', 'Diesel', 'Híbrido'])
+        distintivo = st.selectbox("Distintivo:", ['C', 'ECO', 'B', '0 EMISIONES'])
+        carroceria = st.selectbox("Carrocería:", ['Berlina', 'Todo Terreno', 'Stationwagon', 'Monovolumen', 'Coupe', 'Convertible'])
+        kilometros = st.number_input("Kilómetros:", min_value=0, value=0)
+        cambio = st.selectbox("Cambio:", ['Manual', 'Automático'])
+        potencia = st.number_input("Potencia:", min_value=0, value=100)
 
         coche = {
             'Marca': marca,
@@ -343,7 +343,7 @@ elif selected == "Predecir Precio":
             'Potencia': potencia
         }
 
-        if st.sidebar.button("Predecir Precio"):
+        if st.button("Predecir Precio"):
             precio_predicho = predecir_precio(coche)
             precio_formateado = f"{precio_predicho:,.2f}".replace(',', ' ')
             st.markdown(f"<h2 style='text-align: center; color: green;'>El precio predicho para el coche es: {precio_formateado} € euros</h2>", unsafe_allow_html=True)
@@ -353,7 +353,7 @@ elif selected == "Predecir Precio":
             with col1:
                 logo_path = cargar_logo(marca)
                 logo = Image.open(logo_path)
-                st.image(logo, width=400)
+                st.image(logo, width=200)
             
             with col2:
                 st.write(f"**Marca:** {marca}")
@@ -388,13 +388,13 @@ a:hover,  a:active {
 }
 
 .footer img {
-    width: 30px;
+    width: 20px;
     height: auto;
-    margin: 5px;
+    margin: 3px;
 }
 
 .footer p {
-    margin: 5px;
+    margin: 3px;
 }
 
 .social-icons {
@@ -425,3 +425,4 @@ a:hover,  a:active {
 """
 
 st.markdown(footer, unsafe_allow_html=True)
+
