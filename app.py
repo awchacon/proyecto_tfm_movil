@@ -29,31 +29,25 @@ import tensorflow as tf
 
 #configuramos el title de nuestra pagina -- streamlit run .\app.py
 
-st.set_page_config(page_title="DeepCarVision", page_icon="static/images/logo.png", layout="wide")
+# Configuración de la página
+st.set_page_config(page_title="DeepCarVision", page_icon="static/images/logo.png", layout="centered")
 
+# Cargar el archivo CSS
+with open("static/styles/styles.css") as f:
+    st.markdown(f'<style>{f.read()}</style>', unsafe_allow_html=True)
+
+# Título principal
+st.markdown("<h1 class='center-text'>DeepCarVision</h1>", unsafe_allow_html=True)
 st.write("")
-st.markdown("<h1 style='text-align: center; font-size: 110px; color: #210a93; font-style: italic;'>DeepCarVision</h1>", unsafe_allow_html=True)
 st.write("")
-st.write("")
-selected = option_menu(
-    menu_title=None,
-    options=["Inicio", "Imagen", "DB Coches", "Inspeccion", "Predecir Precio"],  # ,"Mapa","Chatbot"
-    icons=['house', 'book', 'book', 'book', 'book', 'map'],
-    default_index=0,
-    orientation="horizontal",
-    styles={
-        "container": {"padding": "0!important", "background-color": "#000000"},
-        "icon": {"color": "Blue", "font-size": "25px"},
-        "nav-link": {"font-size": "20px", "text-align": "left", "margin": "0px", "--hover-color": "#eee"},
-        "nav-link-selected": {"background-color": "#1248BA"},
-    }
+
+# Menú de opciones
+selected = st.sidebar.selectbox(
+    "Menu",
+    ["Inicio", "Imagen", "DB Coches", "Inspeccion", "Predecir Precio"]
 )
 
-theme_plotly = None
-
-# Declaracion de funciones
-
-# Funcion Home Page
+# Función HomePage
 def HomePage():
     file_ = open("static/images/cars_gif.gif", "rb")
     contents = file_.read()
@@ -64,28 +58,18 @@ def HomePage():
         unsafe_allow_html=True,
     )
 
-    # Cargar el archivo CSS
-    with open("static/styles/styles.css") as f:
-        st.markdown(f'<style>{f.read()}</style>', unsafe_allow_html=True)
-
 def Coches():
-    try: 
+    try:
         st.sidebar.header("Por favor filtre aquí:")
-        but_alq, but_com = st.sidebar.columns(2)
-
         Accion = ['Comprar', 'Vender']
         filtro_accion = st.sidebar.selectbox('Elija una opción:', Accion, index=0)
 
         if filtro_accion == 'Comprar':
-            # Importo los datos de alquiler
             df = pd.read_csv('data/bd_final.csv', sep=',', header=0)
         elif filtro_accion == 'Vender':
-            # Importo los datos de compras
             df = pd.read_csv('data/bd_final.csv', sep=',', header=0)
 
-        # Convertir posibles valores nulos en la columna 'Carrocería' a 'Sin especificar'
         df['Carrocería'] = df['Carrocería'].fillna('Sin especificar')
-
         df_marca_unique = df['Marca'].unique()
         df_cambio_unique = df['Cambio'].unique()
         df_distintivo_unique = df['Distintivo'].unique()
@@ -96,7 +80,6 @@ def Coches():
         Distintivo = st.sidebar.multiselect('Distintivo:', df_distintivo_unique, default=df_distintivo_unique)
         Carroceria = st.sidebar.multiselect('Carrocería:', df_carroceria_unique, default=df_carroceria_unique)
 
-        # Verificar si alguna lista está vacía y establecer un valor predeterminado para evitar errores en query
         if not Marca:
             Marca = df_marca_unique.tolist()
         if not Cambio:
@@ -106,23 +89,19 @@ def Coches():
         if not Carroceria:
             Carroceria = df_carroceria_unique.tolist()
 
-        # Convertir listas a cadenas compatibles con la consulta
         Marca_str = '", "'.join(Marca)
         Cambio_str = '", "'.join(Cambio)
         Distintivo_str = '", "'.join(Distintivo)
         Carroceria_str = '", "'.join(Carroceria)
 
-        # Aplicar filtros usando query
         query_str = f'Marca in ["{Marca_str}"] & Cambio in ["{Cambio_str}"] & Distintivo in ["{Distintivo_str}"] & Carrocería in ["{Carroceria_str}"]'
         df_selection = df.query(query_str)
 
-        # Mostrar solo las columnas seleccionadas del DataFrame
         with st.expander("💵 Mi database de Coches en Madrid 🚗"):
             default_columns = ["Marca", "Cambio", "Codigo", "Serie", "Distintivo", "Carrocería", "Kilómetros"]
             shwdata = st.multiselect('Filtro :', df.columns.tolist(), default=default_columns)
             st.dataframe(df_selection[shwdata], use_container_width=True)
 
-        # Crear la gráfica de barras
         Marca_Cambio = (
             df_selection.groupby('Cambio')['Marca']
             .value_counts()
@@ -146,7 +125,6 @@ def Coches():
             template="plotly_white",
         )
 
-        # Crear la gráfica de línea
         Carroceria_kilometros = df_selection.groupby('Carrocería')['Kilómetros'].mean().nlargest(5).reset_index()
         fig_state = px.line(
             Carroceria_kilometros,
@@ -162,7 +140,6 @@ def Coches():
             yaxis=dict(showgrid=False)
         )
 
-        # Crear la gráfica de pastel
         fig_pie = px.pie(
             df_selection,
             values='Precio',
@@ -178,7 +155,6 @@ def Coches():
             textposition='inside'
         )
 
-        # Mostrar las gráficas en columnas
         left_column, right_column, center_column = st.columns(3)
         left_column.plotly_chart(fig_state, use_container_width=True)
         right_column.plotly_chart(fig_Marca_Cambio, use_container_width=True)
@@ -187,8 +163,6 @@ def Coches():
     except Exception as e:
         st.error(f"Error: {e}")
 
-
-# Función para mostrar Inspeccion
 def Inspeccion():
     but_alq, but_com = st.sidebar.columns(2)
 
@@ -200,7 +174,6 @@ def Inspeccion():
     elif filtro_accion == 'Vender':
         df = pd.read_csv('data/bd_final.csv', sep=',', header=0)
 
-    # Defino la función que muestra las imágenes.
     def main():
         try:
             image_urls = list(df['Imagen'][(df['Precio'] >= filtro_Precio[0]) & (df['Precio'] <= filtro_Precio[1]) &
@@ -279,92 +252,16 @@ def Inspeccion():
     return main()
 
 
-########## Imagen ##########
-
-# Función para cargar el modelo de TensorFlow (esto puede tardar unos segundos)
-# @st.cache_resource
-# def load_model():
-#     model = tf.keras.models.load_model('model/modelo_tfm_best.keras')
-#     return model
-
-# # Función para preprocesar la imagen
-# def preprocess_image(image):
-#     image = tf.image.resize(image, [224, 224])
-#     image = tf.cast(image, tf.float32) / 255.0
-#     return image
-
-# # Función para mostrar la imagen y las predicciones
-# def show_foto_predictions(predictions, class_labels):
-#     st.write("Classification Probabilities:")
-#     for label, probability in predictions.items():
-#         st.write(f"{class_labels[label]}: {probability:.4f}")
-
-# # Definir las etiquetas de clase
-# class_labels = ['Abarth', 'Audi', 'BMW', 'Citroen', 'Hyundai', 'Peugeot', 'Seat', 'Toyota']
-
-# # Cargar el modelo
-# model = load_model()
-
-# # Función para cargar el logo de la marca
-# def cargar_logo(marca):
-#     logos = {
-#         'CITROEN': 'static/logo/citroen.png',
-#         'PEUGEOT': 'static/logo/peugeot.png',
-#         'AUDI': 'static/logo/audi.png',
-#         'TOYOTA': 'static/logo/toyota.png',
-#         'BMW': 'static/logo/bmw.png',
-#         'SEAT': 'static/logo/seat.png',
-#         'HYUNDAI': 'static/logo/hyundai.png'
-#     }
-#     return logos.get(marca.upper(), 'path/to/default_logo.png')
-
-# Función para cargar y clasificar la imagen
 def Imagen():
-    # st.markdown('<div class="centered-content">', unsafe_allow_html=True)
-    
-    # # Subir imagen
-    # uploaded_file = st.file_uploader("Choose an image...", type=["jpg", "png"])
-    # if uploaded_file is not None:
-    #     image = Image.open(uploaded_file)
-    #     st.image(image, caption='Uploaded Image.', use_column_width=True)
-    #     st.write("")
-    #     st.write("Classifying...")
-    #     with st.spinner('Wait for it...'):
-    #         time.sleep(3)
-    #         image_array = np.array(image)
-    #         image_preprocessed = preprocess_image(image_array)
-    #         image_preprocessed = np.expand_dims(image_preprocessed, axis=0)
-
-    #         predictions = model.predict(image_preprocessed)
-    #         top_7 = predictions[0].argsort()[-7:][::-1]  # Assuming you have 7 classes
-
-    #         top_7_labels = {i: predictions[0][i] for i in top_7}
-
-    #         # Mostrar el logo y las predicciones en columnas
-    #         col1, col2 = st.columns([1, 2])
-            
-    #         with col1:
-    #             logo_path = cargar_logo(class_labels[top_7[0]])
-    #             logo_image = Image.open(logo_path)
-    #             st.image(logo_image, width=300)
-            
-    #         with col2:
-    #             show_foto_predictions(top_7_labels, class_labels)
-    
     st.markdown('</div>', unsafe_allow_html=True)
 
-
-###### Cargar el footer  ######
-
-#Pestañas de pagina
 if selected =="Inicio":
     HomePage()
-
 
 if selected == "DB Coches":
     df_selection = Coches()
     try:
-        st.markdown("""---""") #Diferencia entre dos
+        st.markdown("""---""")
         total_tipo_coche = float(df_selection['Marca'].count())
         coche_mode = df_selection['Marca'].mode().iloc[0]
 
@@ -379,7 +276,6 @@ if selected == "DB Coches":
     except:
             st.warning("Escoja entre Comprar o Vender ")
 
-
 if selected == "Inspeccion":
     Inspeccion()
 
@@ -387,35 +283,23 @@ if selected == "Imagen":
     Imagen()
 
 elif selected == "Predecir Precio":
-    # Cargar el modelo RandomForestRegressor y el encoder
     with open("data/coche_sale_buy/mejor_modelo_rf.pkl", "rb") as file:
         mejor_rf = pickle.load(file)
 
     with open("data/coche_sale_buy/ordinal_encoder.pkl", "rb") as file:
         encoder = pickle.load(file)
 
-    # Columnas categóricas y numéricas
     categorical_cols = ['Marca', 'Combustible', 'Distintivo', 'Carrocería', 'Cambio']
     numerical_cols = ['Año', 'Kilómetros', 'Potencia']
     column_features = categorical_cols + numerical_cols
 
-    # Función para predecir el precio del coche
     def predecir_precio(coche):
-        # Convertir el diccionario a un DataFrame
         coche_df = pd.DataFrame([coche])
-        
-        # Codificar columnas categóricas
         coche_df[categorical_cols] = encoder.transform(coche_df[categorical_cols])
-        
-        # Asegurarse de que las columnas estén en el mismo orden que las columnas de entrenamiento del modelo
         coche_df = coche_df[column_features]
-        
-        # Realizar la predicción
         precio_predicho = mejor_rf.predict(coche_df)
-        
         return precio_predicho[0]
 
-    # Función para cargar la imagen del logo
     def cargar_logo(marca):
         logos = {
             'CITROEN': 'static/logo/citroen.png',
@@ -428,7 +312,6 @@ elif selected == "Predecir Precio":
         }
         return logos.get(marca, 'path/to/default_logo.png')
 
-    # Función para la interfaz de usuario
     def main():
         if "precio_predicho" not in st.session_state:
             st.session_state.precio_predicho = None
@@ -436,7 +319,6 @@ elif selected == "Predecir Precio":
         if st.session_state.precio_predicho is None:
             st.markdown("<h2 style='text-align: center; font-size:24px;'>Predicción de Precio de Coches</h2>", unsafe_allow_html=True)
 
-        # Interfaz para ingresar datos del coche
         st.sidebar.header("Ingrese los datos del coche:")
         marca = st.sidebar.selectbox("Marca:", ['CITROEN', 'PEUGEOT', 'AUDI', 'TOYOTA', 'BMW', 'SEAT', 'HYUNDAI'])
         año = st.sidebar.slider("Año:", 2017, 2023)
@@ -458,14 +340,11 @@ elif selected == "Predecir Precio":
             'Potencia': potencia
         }
 
-        # Realizar la predicción cuando se hace clic en el botón
         if st.sidebar.button("Predecir Precio"):
             precio_predicho = predecir_precio(coche)
             precio_formateado = f"{precio_predicho:,.2f}".replace(',', ' ')
             st.markdown(f"<h2 style='text-align: center; color: green;'>El precio predicho para el coche es: {precio_formateado} € euros</h2>", unsafe_allow_html=True)
             
-            
-             # Mostrar el logo del coche y las características en columnas
             col1, col2 = st.columns([1, 2])
             
             with col1:
@@ -494,24 +373,25 @@ a:hover,  a:active {
 }
 
 .footer {
-    position: fixed;
+    position: relative;
     left: 0;
-    height: 7%;
+    height: auto;
     bottom: 0;
     width: 100%;
     background-color: #243946;
     color: black;
     text-align: center;
+    padding: 10px 0;
 }
 
 .footer img {
-    width: 50px; /* ajusta el tamaño según sea necesario */
+    width: 30px;
     height: auto;
-    margin: 10px; /* ajusta el margen según sea necesario */
+    margin: 5px;
 }
 
 .footer p {
-    margin: 10px; /* ajusta el margen según sea necesario */
+    margin: 5px;
 }
 
 .social-icons {
