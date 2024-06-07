@@ -255,7 +255,78 @@ def Inspeccion():
 
     return main()
 
+########## Imagen ##########
+
+# Función para cargar el modelo de TensorFlow (esto puede tardar unos segundos)
+@st.cache_resource
+def load_model():
+    model = tf.keras.models.load_model('model/modelo_tfm_best.keras')
+    return model
+
+# Función para preprocesar la imagen
+def preprocess_image(image):
+    image = tf.image.resize(image, [224, 224])
+    image = tf.cast(image, tf.float32) / 255.0
+    return image
+
+# Función para mostrar la imagen y las predicciones
+def show_foto_predictions(predictions, class_labels):
+    st.write("Classification Probabilities:")
+    for label, probability in predictions.items():
+        st.write(f"{class_labels[label]}: {probability:.4f}")
+
+# Definir las etiquetas de clase
+class_labels = ['Abarth', 'Audi', 'BMW', 'Citroen', 'Hyundai', 'Peugeot', 'Seat', 'Toyota']
+
+# Cargar el modelo
+model = load_model()
+
+# Función para cargar el logo de la marca
+def cargar_logo(marca):
+    logos = {
+        'CITROEN': 'static/logo/citroen.png',
+        'PEUGEOT': 'static/logo/peugeot.png',
+        'AUDI': 'static/logo/audi.png',
+        'TOYOTA': 'static/logo/toyota.png',
+        'BMW': 'static/logo/bmw.png',
+        'SEAT': 'static/logo/seat.png',
+        'HYUNDAI': 'static/logo/hyundai.png'
+    }
+    return logos.get(marca.upper(), 'path/to/default_logo.png')
+
+# Función para cargar y clasificar la imagen
 def Imagen():
+    st.markdown('<div class="centered-content">', unsafe_allow_html=True)
+    
+    # Subir imagen
+    uploaded_file = st.file_uploader("Choose an image...", type=["jpg", "png"])
+    if uploaded_file is not None:
+        image = Image.open(uploaded_file)
+        st.image(image, caption='Uploaded Image.', use_column_width=True)
+        st.write("")
+        st.write("Classifying...")
+        with st.spinner('Wait for it...'):
+            time.sleep(3)
+            image_array = np.array(image)
+            image_preprocessed = preprocess_image(image_array)
+            image_preprocessed = np.expand_dims(image_preprocessed, axis=0)
+
+            predictions = model.predict(image_preprocessed)
+            top_7 = predictions[0].argsort()[-7:][::-1]  # Assuming you have 7 classes
+
+            top_7_labels = {i: predictions[0][i] for i in top_7}
+
+            # Mostrar el logo y las predicciones en columnas
+            col1, col2 = st.columns([1, 2])
+            
+            with col1:
+                logo_path = cargar_logo(class_labels[top_7[0]])
+                logo_image = Image.open(logo_path)
+                st.image(logo_image, width=300)
+            
+            with col2:
+                show_foto_predictions(top_7_labels, class_labels)
+    
     st.markdown('</div>', unsafe_allow_html=True)
 
 if selected =="Inicio":
