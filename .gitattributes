@@ -1,1 +1,2 @@
 *.pkl filter=lfs diff=lfs merge=lfs -text
+model/modelo_tfm_best.keras filter=lfs diff=lfs merge=lfs -text
