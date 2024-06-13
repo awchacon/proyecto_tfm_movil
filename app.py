@@ -383,7 +383,7 @@ elif selected == "Predecir Precio":
             'BMW': 'static/logo/bmw.png',
             'SEAT': 'static/logo/seat.png',
             'HYUNDAI': 'static/logo/hyundai.jpg'
-        }
+        } 
         return logos.get(marca, 'path/to/default_logo.png')
 
     def main():
@@ -401,7 +401,7 @@ elif selected == "Predecir Precio":
         carroceria = st.selectbox("Carrocería:", ['Berlina', 'Todo Terreno', 'Stationwagon', 'Monovolumen', 'Coupe', 'Convertible'])
         kilometros = st.number_input("Kilómetros:", min_value=0, value=0)
         cambio = st.selectbox("Cambio:", ['Manual', 'Automático'])
-        potencia = st.sidebar.slider("Potencia:", 60, 740 , step=10)
+        potencia = st.slider("Potencia:", 60, 740, step=10)
 
         coche = {
             'Marca': marca,
