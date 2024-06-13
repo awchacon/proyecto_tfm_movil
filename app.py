@@ -290,7 +290,7 @@ def cargar_logo(marca):
         'TOYOTA': 'static/logo/toyota.png',
         'BMW': 'static/logo/bmw.png',
         'SEAT': 'static/logo/seat.png',
-        'HYUNDAI': 'static/logo/hyundai.png'
+        'HYUNDAI': 'static/logo/hyundai.jpg'
     }
     return logos.get(marca.upper(), 'path/to/default_logo.png')
 
@@ -382,7 +382,7 @@ elif selected == "Predecir Precio":
             'TOYOTA': 'static/logo/toyota.png',
             'BMW': 'static/logo/bmw.png',
             'SEAT': 'static/logo/seat.png',
-            'HYUNDAI': 'static/logo/hyundai.png'
+            'HYUNDAI': 'static/logo/hyundai.jpg'
         }
         return logos.get(marca, 'path/to/default_logo.png')
 
@@ -401,7 +401,7 @@ elif selected == "Predecir Precio":
         carroceria = st.selectbox("Carrocería:", ['Berlina', 'Todo Terreno', 'Stationwagon', 'Monovolumen', 'Coupe', 'Convertible'])
         kilometros = st.number_input("Kilómetros:", min_value=0, value=0)
         cambio = st.selectbox("Cambio:", ['Manual', 'Automático'])
-        potencia = st.number_input("Potencia:", min_value=0, value=100)
+        potencia = st.sidebar.slider("Potencia:", 60, 740 , step=10)
 
         coche = {
             'Marca': marca,
